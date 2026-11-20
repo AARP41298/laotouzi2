@@ -45,6 +45,10 @@
 
   footer { margin-top: 16px; font-size: .8rem; color: var(--muted); }
   footer a { color: inherit; }
+  footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  /* White-on-transparent pixel art; drawn black on the light theme. */
+  .badge { flex: none; width: 76px; height: 62px; image-rendering: pixelated; filter: invert(1); }
+  @media (prefers-color-scheme: dark) { .badge { filter: none; } }
 </style>
 </head>
 <body>
@@ -73,7 +77,10 @@ Sunglass babe
       <div class="pane"><div class="text" id="out" role="textbox" aria-readonly="true" aria-label="Han'gŭl"></div></div>
     </div>
   </div>
-  <footer>Based on the converter at laotouzi.de/conv (lexilogos.com, adapted by laotouzi). Source and the original scripts: <a href="https://github.com/AARP41298/laotouzi2">github.com/AARP41298/laotouzi2</a>.</footer>
+  <footer>
+    <span>Based on the converter at laotouzi.de/conv (lexilogos.com, adapted by laotouzi). Source and the original scripts: <a href="https://github.com/AARP41298/laotouzi2">github.com/AARP41298/laotouzi2</a>.</span>
+    <img class="badge" src="hecho-en-mexico.png" width="38" height="31" alt="Hecho en México">
+  </footer>
 </main>
 <script src="romanizer.js"></script>
 <script>
