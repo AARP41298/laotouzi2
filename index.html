@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hangul Romanizer</title>
+<style>
+  :root { --bg: #fafaf7; --fg: #1d1d1b; --muted: #6b6b66; --line: #d9d8d0; --accent: #b3261e; --panel: #fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #161615; --fg: #ecebe6; --muted: #9a9993; --line: #34332f; --accent: #ef6f62; --panel: #1f1f1d; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; } h1 span { color: var(--accent); }
+  p.sub { margin: 0 0 20px; color: var(--muted); font-size: .9rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  label { display: flex; justify-content: space-between; align-items: center; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
+  textarea { width: 100%; min-height: 60vh; resize: vertical; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--fg); font: 1.05rem/1.6 system-ui, sans-serif; }
+  button { font: inherit; font-size: .8rem; padding: 3px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--fg); cursor: pointer; }
+  footer { margin-top: 16px; font-size: .8rem; color: var(--muted); }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <h1><span>한글</span> → Han'gŭl</h1>
+  <p class="sub">McCune-Reischauer with sound changes. Only Hangul is converted; English, numbers, emoji and punctuation stay as they are.</p>
+  <div class="grid">
+    <div><label for="in">한글</label><textarea id="in" autofocus>🐲 I'm in love 눈에 콩깍지 씌었어 babe (Oh)
+사람이야 천사야 oh Jesus, babe (Woh)
+시간이 지나도 내가 설렐 수 있게</textarea></div>
+    <div><label for="out">Han'gŭl <button id="copy" type="button">Copy</button></label><textarea id="out" readonly></textarea></div>
+  </div>
+  <footer>Based on the converter at laotouzi.de/conv (lexilogos.com, adapted by laotouzi). The original scripts are kept in <code>original/</code>.</footer>
+</main>
+<script src="romanizer.js"></script>
+<script>
+  const input = document.getElementById('in'), output = document.getElementById('out');
+  const run = () => { output.value = HangulRomanizer.romanize(input.value); };
+  input.addEventListener('input', run); run();
+  document.getElementById('copy').addEventListener('click', async (e) => {
+    try { await navigator.clipboard.writeText(output.value); } catch { output.select(); document.execCommand('copy'); }
+    e.target.textContent = 'Copied'; setTimeout(() => (e.target.textContent = 'Copy'), 1200);
+  });
+</script>
+</body>
+</html>

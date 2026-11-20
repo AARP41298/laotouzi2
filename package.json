@@ -1,0 +1,12 @@
+{
+  "name": "laotouzi-hangul-romanizer",
+  "version": "1.0.0",
+  "description": "McCune-Reischauer Hangul romanizer with sound changes, based on laotouzi.de/conv",
+  "main": "romanizer.js",
+  "scripts": {
+    "test": "node --test test/romanizer.test.mjs",
+    "compare": "node tools/compare.mjs"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
