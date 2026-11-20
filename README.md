@@ -1,5 +1,7 @@
 # laotouzi Hangul romanizer
 
+**Try it: https://aarp41298.github.io/laotouzi2/**
+
 The converter page at `laotouzi.de/conv` is gone. A Wayback Machine copy
 (2026-03-07) is backed up byte-for-byte in [`original/`](original/):
 
@@ -34,7 +36,8 @@ The spelling style and the author's choices are otherwise kept
 
 ## Use
 
-Open `index.html`, or:
+Use the [online page](https://aarp41298.github.io/laotouzi2/) (hover a word
+to find it on the other side), open `index.html` locally, or:
 
 ```js
 const { romanize } = require('./romanizer.js'); // or window.HangulRomanizer
