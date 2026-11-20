@@ -5,18 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hangul Romanizer</title>
 <style>
-  :root { --bg: #fafaf7; --fg: #1d1d1b; --muted: #6b6b66; --line: #d9d8d0; --accent: #b3261e; --panel: #fff; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #161615; --fg: #ecebe6; --muted: #9a9993; --line: #34332f; --accent: #ef6f62; --panel: #1f1f1d; } }
+  :root {
+    --bg: #fafaf7; --fg: #1d1d1b; --muted: #6b6b66; --line: #d9d8d0; --accent: #b3261e; --panel: #fff;
+    --hl-line: rgba(179, 38, 30, .07); --hl-word: rgba(179, 38, 30, .22);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161615; --fg: #ecebe6; --muted: #9a9993; --line: #34332f; --accent: #ef6f62; --panel: #1f1f1d;
+      --hl-line: rgba(239, 111, 98, .09); --hl-word: rgba(239, 111, 98, .30); }
+  }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; }
   main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
   h1 { font-size: 1.4rem; margin: 0 0 4px; } h1 span { color: var(--accent); }
   p.sub { margin: 0 0 20px; color: var(--muted); font-size: .9rem; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
-  label { display: flex; justify-content: space-between; align-items: center; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
-  textarea { width: 100%; min-height: 60vh; resize: vertical; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--fg); font: 1.05rem/1.6 system-ui, sans-serif; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } .pane { height: 40vh; } }
+  label { display: flex; justify-content: space-between; align-items: center; min-height: 28px; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
   button { font: inherit; font-size: .8rem; padding: 3px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--fg); cursor: pointer; }
+
+  /* Both panes and the input's backdrop share exactly the same box and text
+     metrics, so the backdrop wraps lines the same way the textarea does. */
+  .pane { position: relative; height: 65vh; border-radius: 8px; background: var(--panel); }
+  .text {
+    position: absolute; inset: 0; margin: 0; padding: 12px;
+    border: 1px solid var(--line); border-radius: 8px;
+    font: 1.05rem/1.6 system-ui, sans-serif; letter-spacing: normal; tab-size: 4;
+    white-space: pre-wrap; overflow-wrap: break-word; word-break: normal;
+    overflow-x: hidden; overflow-y: scroll;
+  }
+  textarea.text { resize: none; background: transparent; color: var(--fg); caret-color: var(--fg); z-index: 1; outline: none; }
+  textarea.text:focus { border-color: var(--muted); }
+  .backdrop { color: transparent; pointer-events: none; user-select: none; }
+  .text { scrollbar-width: thin; } /* same scrollbar everywhere = same wrap width */
+  .ln { display: block; border-radius: 4px; }
+  .w { border-radius: 3px; }
+  .ln.hl { background: var(--hl-line); }
+  .w.hl { background: var(--hl-word); box-shadow: 0 0 0 2px var(--hl-word); }
+  #out { color: var(--fg); cursor: default; }
+
   footer { margin-top: 16px; font-size: .8rem; color: var(--muted); }
   footer a { color: inherit; }
 </style>
@@ -24,24 +50,175 @@
 <body>
 <main>
   <h1><span>한글</span> → Han'gŭl</h1>
-  <p class="sub">McCune-Reischauer with sound changes. Only Hangul is converted; English, numbers, emoji and punctuation stay as they are.</p>
+  <p class="sub">McCune-Reischauer with sound changes. Only Hangul is converted; English, numbers, emoji and punctuation stay as they are. Hover a word to find it on the other side.</p>
   <div class="grid">
-    <div><label for="in">한글</label><textarea id="in" autofocus>🐲 I'm in love 눈에 콩깍지 씌었어 babe (Oh)
+    <div>
+      <label for="in">한글</label>
+      <div class="pane">
+        <div class="text backdrop" id="mirror" aria-hidden="true"></div>
+        <textarea class="text" id="in" spellcheck="false" autofocus>🐲 I'm in love 눈에 콩깍지 씌었어 babe (Oh)
+하의 실종에 흰 와이셔츠 babe (Oh)
 사람이야 천사야 oh Jesus, babe (Woh)
-시간이 지나도 내가 설렐 수 있게</textarea></div>
-    <div><label for="out">Han'gŭl <button id="copy" type="button">Copy</button></label><textarea id="out" readonly></textarea></div>
+눈부셔 babe (Woh)
+Sunglass babe
+정신이 망신이야 홀렸어 네게 (Yeh)
+피가 한쪽으로 또 쏠렸어 네게 (Right)
+위험해 you're so dangerous babe
+살려줘 babe
+경찰 불러 babe</textarea>
+      </div>
+    </div>
+    <div>
+      <label>Han'gŭl <button id="copy" type="button">Copy</button></label>
+      <div class="pane"><div class="text" id="out" role="textbox" aria-readonly="true" aria-label="Han'gŭl"></div></div>
+    </div>
   </div>
-  <footer>Based on the converter at laotouzi.de/conv (lexilogos.com, adapted by laotouzi). The original scripts are kept in <code>original/</code>.</footer>
+  <footer>Based on the converter at laotouzi.de/conv (lexilogos.com, adapted by laotouzi). Source and the original scripts: <a href="https://github.com/AARP41298/laotouzi2">github.com/AARP41298/laotouzi2</a>.</footer>
 </main>
 <script src="romanizer.js"></script>
 <script>
-  const input = document.getElementById('in'), output = document.getElementById('out');
-  const run = () => { output.value = HangulRomanizer.romanize(input.value); };
-  input.addEventListener('input', run); run();
-  document.getElementById('copy').addEventListener('click', async (e) => {
-    try { await navigator.clipboard.writeText(output.value); } catch { output.select(); document.execCommand('copy'); }
-    e.target.textContent = 'Copied'; setTimeout(() => (e.target.textContent = 'Copy'), 1200);
+(() => {
+  const input = document.getElementById('in');
+  const mirror = document.getElementById('mirror');
+  const output = document.getElementById('out');
+  const { romanize } = HangulRomanizer;
+  let plainOutput = '';
+
+  // ------------------------------------------------------------ rendering
+  // Each line becomes <span class="ln" data-l>, each non-space token a
+  // <span class="w" data-l data-w>. Hangul runs never contain whitespace, so
+  // romanizing token by token gives the same text as romanizing the line, and
+  // token n of line k on the left is token n of line k on the right.
+  function renderLines(target, lines, convert) {
+    const frag = document.createDocumentFragment();
+    lines.forEach((line, l) => {
+      const ln = document.createElement('span');
+      ln.className = 'ln';
+      ln.dataset.l = l;
+      let w = 0;
+      for (const tok of line.split(/(\s+)/)) {
+        if (!tok) continue;
+        if (/^\s+$/.test(tok)) { ln.append(tok); continue; }
+        const s = document.createElement('span');
+        s.className = 'w';
+        s.dataset.l = l;
+        s.dataset.w = w++;
+        s.textContent = convert(tok);
+        ln.append(s);
+      }
+      if (!line) ln.append('​'); // keep empty lines one line tall
+      frag.append(ln);
+    });
+    target.replaceChildren(frag);
+  }
+
+  function render() {
+    const lines = input.value.split('\n');
+    renderLines(mirror, lines, (t) => t);
+    renderLines(output, lines, romanize);
+    plainOutput = lines.map(romanize).join('\n');
+    mirror.scrollTop = input.scrollTop;
+    applyHighlight();
+  }
+
+  // ------------------------------------------------------------ scroll sync
+  // Romanized lines are longer and may wrap differently, so instead of copying
+  // scrollTop we keep the same source line at the top of both panes.
+  function topLine(container) {
+    const lines = container.children;
+    const y = container.scrollTop;
+    let lo = 0, hi = lines.length - 1;
+    while (lo < hi) { // last line whose top is <= y
+      const mid = (lo + hi + 1) >> 1;
+      if (lines[mid].offsetTop <= y) lo = mid; else hi = mid - 1;
+    }
+    const el = lines[lo];
+    if (!el) return null;
+    return { index: lo, frac: el.offsetHeight ? (y - el.offsetTop) / el.offsetHeight : 0 };
+  }
+
+  const expected = new Map(); // element -> scrollTop we set ourselves
+  function scrollTo(el, top) {
+    top = Math.max(0, Math.min(top, el.scrollHeight - el.clientHeight));
+    if (Math.abs(el.scrollTop - top) < 1) return;
+    expected.set(el, Math.round(top));
+    el.scrollTop = top;
+  }
+  function isEcho(el) {
+    const e = expected.get(el);
+    if (e === undefined) return false;
+    expected.delete(el);
+    return Math.abs(el.scrollTop - e) <= 1;
+  }
+
+  function follow(fromLines, fromScroller, toLines, toScroller) {
+    // Bottom reached: pin the other pane to its bottom too.
+    if (fromScroller.scrollTop + fromScroller.clientHeight >= fromScroller.scrollHeight - 1) {
+      scrollTo(toScroller, toScroller.scrollHeight);
+      return;
+    }
+    const pos = topLine(fromLines);
+    if (!pos) return;
+    const target = toLines.children[pos.index];
+    if (target) scrollTo(toScroller, target.offsetTop + pos.frac * target.offsetHeight);
+  }
+
+  input.addEventListener('scroll', () => {
+    mirror.scrollTop = input.scrollTop;
+    if (isEcho(input)) return;
+    follow(mirror, input, output, output);
   });
+  output.addEventListener('scroll', () => {
+    if (isEcho(output)) return;
+    follow(output, output, mirror, input);
+  });
+
+  // ------------------------------------------------------------ highlight
+  let hover = null; // { l, w } — w is null when over a line but not a word
+  function applyHighlight() {
+    for (const el of document.querySelectorAll('.hl')) el.classList.remove('hl');
+    if (!hover) return;
+    for (const root of [mirror, output]) {
+      root.children[hover.l]?.classList.add('hl');
+      if (hover.w !== null) root.querySelector(`.w[data-l="${hover.l}"][data-w="${hover.w}"]`)?.classList.add('hl');
+    }
+  }
+  function setHover(el) {
+    const ln = el?.closest?.('.ln');
+    const next = ln ? { l: +ln.dataset.l, w: el.closest('.w') ? +el.closest('.w').dataset.w : null } : null;
+    if (next?.l === hover?.l && next?.w === hover?.w) return;
+    hover = next;
+    applyHighlight();
+  }
+
+  output.addEventListener('mousemove', (e) => setHover(e.target));
+  output.addEventListener('mouseleave', () => setHover(null));
+  // The textarea covers the mirror, so look through it for a moment to find
+  // which mirrored span is under the pointer.
+  input.addEventListener('mousemove', (e) => {
+    input.style.pointerEvents = 'none';
+    mirror.style.pointerEvents = 'auto';
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    mirror.style.pointerEvents = '';
+    input.style.pointerEvents = '';
+    setHover(mirror.contains(el) && el !== mirror ? el : null);
+  });
+  input.addEventListener('mouseleave', () => setHover(null));
+
+  // ------------------------------------------------------------ misc
+  input.addEventListener('input', render);
+  new ResizeObserver(() => { mirror.scrollTop = input.scrollTop; }).observe(input);
+  document.getElementById('copy').addEventListener('click', async (e) => {
+    try { await navigator.clipboard.writeText(plainOutput); }
+    catch {
+      const t = document.createElement('textarea');
+      t.value = plainOutput; document.body.append(t); t.select(); document.execCommand('copy'); t.remove();
+    }
+    e.target.textContent = 'Copied';
+    setTimeout(() => (e.target.textContent = 'Copy'), 1200);
+  });
+  render();
+})();
 </script>
 </body>
 </html>
