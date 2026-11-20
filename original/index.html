@@ -1,0 +1,91 @@
+				<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<title>한글 > han-geul - han'gŭl - han geul - Konverter</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="Description" content="Testversion eines Hangul-Konverters nach überarbeiteten Transliterationsregeln">
+<meta name="Keywords" content="한글, McCune-Reischauer, han-geul, han geul, Korea 1959, Korea 2000, Hangul, Han'gul, Hangul-Konverter, Koreanisch, Transliteration Koreanisch, Katalogisierung, Katalogisierung Koreanisch, orginalschriftlich, orginalschriftliche Katalogisierung, laotouzi, Stephan Heupst">
+<style type="text/css">
+.big { color:black; font-family:'Arial Unicode MS'; font-size:20pt; padding:5px; }
+.bf {cursor:pointer; font-size:9pt; color:#666666; }
+.cadr { width:94%; color:blue; font-family:'Arial Unicode MS'; font-size:12pt; padding:5px; scrollbar-base-color:transparent; scrollbar-track-color:transparent; }
+.cadr2 { width:94%; color:blue; font-family:'Arial Unicode MS'; font-size:12pt; padding:5px; scrollbar-base-color:transparent; scrollbar-track-color:transparent; }
+.cadr2:first-letter { text-transform: uppercase;}
+.small {color:black; font-family:'Arial Unicode MS'; font-size:15pt; padding:5px; }
+.smaller {color:black; font-family:'Arial Unicode MS'; font-size:13pt; padding:5px; }
+</style>
+
+<script type="text/javascript" src="konv.js"></script>
+<script type="text/javascript" src="neuer_versuch.js"></script>
+<script type="text/javascript" src="konvohne.js"></script>
+
+<script language="JavaScript">
+<!--
+function kopierenhangul() // mccune
+{
+document.transcription.text2.focus()
+document.transcription.text2.select()
+document.transcription.text2.createTextRange().execCommand("Copy")   
+}
+function kopierenhangeul() // han-geul
+{
+document.transcription.text4.focus()
+document.transcription.text4.select()
+document.transcription.text4.createTextRange().execCommand("Copy")
+}
+function kopierenhangeulohne() // han geul
+{
+document.transcription.text6.focus()
+document.transcription.text6.select()
+document.transcription.text6.createTextRange().execCommand("Copy")
+}
+-->
+</script>
+</head>
+<body onLoad="transcription.text5.value=' 한글 ', transcription.text6.value=' Han geul', transcription.text1.value=' 한글 ', transcription.text2.value=' Han-geul', transcription.text3.value=' 한글 ', transcription.text4.value=' Han´gŭl', transcription.text1.focus()">
+<p class="big" align="center"><font color=red>한글 > Han-geul - Han'gŭl - </font><font color=gray>(han geul test)</font><font color=red> - converter</font><p>
+
+  <form name=transcription>
+	<table width="700" class="small" border="0" align="center">
+	
+	<tr align="center"><td>한글</td><td>Han-geul</td><td>&nbsp;</td></tr>
+	<tr align="center">
+	<td width="50%">
+	<textarea name="text1" rows=6  onKeyUp="gbv()" class=cadr size=50"></textarea>
+	</td>
+	<td width="50%">
+	<textarea name="text2" rows=6 class=cadr2></textarea>
+	</td><td><input type="button" value="select" onClick="javascript:kopierenhangul()"></td></tr>
+	<tr align="center"><td>한글</td><td>Han'gŭl</td><td>&nbsp;</td></tr>
+	<tr align=center>
+	<td width="50%">
+	<textarea name="text3" rows=6  onKeyUp="corlat()" class=cadr size="100"></textarea>
+	</td>
+	<td width="50%">
+	<textarea name="text4" rows=6 class=cadr2></textarea>
+	</td><td><input type="button" value="select" onClick="javascript:kopierenhangeul()"></td></tr>
+	<tr align="center"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+	<tr align="center"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+
+	<tr align="center"><td><font color=gray>한글</font></td><td><font color=gray>Han geul<font></td><td>&nbsp;</td></tr>
+	<tr align="center">
+	<td width="50%">
+	<textarea name="text5" rows=6  onKeyUp="gbvohne()" class=cadr size=50"></textarea>
+	</td>
+	<td width="50%">
+	<textarea name="text6" rows=6 class=cadr2></textarea>
+	</td><td><input type="button" value="select" onClick="javascript:kopierenhangeulohne()"></td></tr>
+</table> 
+</form>
+<table width=95% class="smaller" align="center">
+<tr>
+<td>
+<center>
+<br>
+<a href="sheupst@sub.uni-goettingen.de" style="color:blue; font-family:'Arial Unicode MS'; font-size:13pt; padding:5px; ">sheupst@sub.uni-goettingen.de</a><br><br><a href="http://laotouzi.wordpress.com/2009/07/05/hangul-konverter/" style="color:blue; font-family:'Arial Unicode MS'; font-size:13pt; padding:5px; ">blog zur CJK-Katalogisierung</a>
+</p>
+</td>
+</tr>
+</table>
+</body></html>
+
+
